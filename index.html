@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Cute Gift from Chakriya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-light: #ffdeeb;
+            --pink-dark: #ff85a1;
+            --mint: #b5ead7;
+            --christmas-red: #ff5d5d;
+            --tree-green: #4db6ac;
+            /* Base sizes */
+            --env-width: 320px;
+            --env-height: 220px;
+        }
+
+        /* Responsive Scaling for Mobile */
+        @media (max-width: 480px) {
+            :root {
+                --env-width: 280px;
+                --env-height: 190px;
+            }
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--pink-light);
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            /* Prevents blue highlight on tap for mobile */
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        .bg-decor {
+            position: absolute;
+            font-size: clamp(1rem, 5vw, 2rem);
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        #open-trigger { display: none; }
+
+        .wrapper {
+            position: relative;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s ease;
+            width: var(--env-width);
+            height: var(--env-height);
+        }
+
+        .wrapper:hover { transform: scale(1.05); }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 15px 35px rgba(255, 133, 161, 0.4);
+            border: 4px solid var(--pink-dark);
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart-seal {
+            font-size: 40px;
+            color: var(--pink-dark);
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .flap {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: calc(100% + 8px);
+            height: 100%;
+            background-color: white;
+            border: 4px solid var(--pink-dark);
+            clip-path: polygon(0 0, 50% 50%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.5s ease;
+            z-index: 8;
+        }
+
+        .card {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 170%; /* Card is taller than envelope */
+            background-color: white;
+            border-radius: 20px;
+            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .card-top {
+            background-color: var(--christmas-red);
+            width: 100%;
+            height: 75%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            padding-top: 20px;
+            position: relative;
+        }
+
+        .card-top .from { 
+            font-family: 'Pacifico', cursive;
+            font-size: 1rem; 
+            margin: 0; 
+        }
+
+        .card-top .main-text { 
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(1.4rem, 5vw, 1.8rem); 
+            margin: 5px 0; 
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .tree {
+            width: 0; height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 80px solid var(--tree-green);
+            position: relative;
+            margin-top: 10px;
+        }
+        .tree::after {
+            content: '⭐';
+            position: absolute;
+            top: -105px; left: -14px;
+            font-size: 22px;
+        }
+        .tree-dots {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: gold;
+            border-radius: 50%;
+            top: -35px; left: -4px;
+            box-shadow: -15px 15px white, 15px 15px var(--pink-light);
+        }
+
+        .snow-hill {
+            position: absolute;
+            bottom: -30px;
+            width: 130%;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .card-bottom {
+            height: 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff5d5d;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+        }
+
+        /* Interaction States */
+        #open-trigger:checked ~ .wrapper .flap {
+            transform: rotateX(180deg);
+            z-index: 2;
+        }
+
+        #open-trigger:checked ~ .wrapper .card {
+            /* Adjusted for responsiveness */
+            transform: translate(-50%, -105%);
+        }
+
+        #open-trigger:checked ~ .wrapper .heart-seal {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .tap-me {
+            position: absolute;
+            bottom: -50px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: var(--pink-dark);
+            animation: bounce 1.5s infinite;
+            font-size: 0.9rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-decor" style="top:5%; left:5%;">❄️</div>
+    <div class="bg-decor" style="top:15%; right:10%; animation-delay: 1s;">💖</div>
+    <div class="bg-decor" style="bottom:10%; left:10%; animation-delay: 2s;">🎁</div>
+    <div class="bg-decor" style="bottom:15%; right:5%; animation-delay: 1.5s;">✨</div>
+
+    <input type="checkbox" id="open-trigger">
+    
+    <div class="wrapper">
+        <label for="open-trigger">
+            <div class="flap"></div>
+            <div class="envelope">
+                <div class="heart-seal">❤️</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-top">
+                    <p class="from">Gift from Chakriya</p>
+                    <h1 class="main-text">MERRY<br>CHRISTMAS</h1>
+                    <div class="tree">
+                        <div class="tree-dots"></div>
+                    </div>
+                    <div class="snow-hill"></div>
+                </div>
+                <div class="card-bottom">
+                    Merry Christmas!
+                </div>
+            </div>
+            
+            <div class="tap-me">Tap to open, Cutie! ✨</div>
+        </label>
+    </div>
+
+</body>
+</html>
